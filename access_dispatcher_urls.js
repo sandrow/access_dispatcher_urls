@@ -2,110 +2,62 @@
 //This is to automate accessing the dispatcher URLs for data refreshes (JavaScript)
 //This is to be ran as a browser snippet
 
+const previewIP = 'XX.XX.XX.XX';
+const prodIP = ['XX.XX.XX.XX', 'XX.XX.XX.XX', 'XX.XX.XX.XX', 'XX.XX.XX.XX'];
 
-// Task #1 Create a prompt that shows a pop up that allows the user to type in brand year and trim => DONE!
-function getCarDetailsPreview() {
-    let brand = prompt("Please enter the Brand");
-    let brandText;
-    if (brand == null || brand == "") {
-        brandText = "User cancelled the prompt.";
-    } else {
-        brandText = "The Brand you typed is " + brand + " thanks!";
-    }
+let env = prompt('Please enter the Environment');
+let brand = prompt('Please enter the Brand');
+let year = prompt('Please enter the Year');
+let trim = prompt('Please enter the Trim');
 
-    let year = prompt("Please enter the Year");
-    let yearText;
-    if (year == null || year == "") {
-        yearText = "User cancelled the prompt.";
-    } else {
-        yearText = "The Year you typed is " + year + " thanks!";
-    }
 
-    let trim = prompt("Please enter the Trim");
-    let trimText;
-    if (trim == null || trim == "") {
-        trimText = "User cancelled the prompt.";
-    } else {
-        ///////////////////////////////////
-        // This code snippet can be found in the confluence documentation and is meant for internal use only
-        ///////////////////////////////////
-    }
-
-};
-
-function getCarDetailsProd() {
-    let brand = prompt("Please enter the Brand");
-    let brandText;
-    if (brand == null || brand == "") {
-        brandText = "User cancelled the prompt.";
-    } else {
-        brandText = "The Brand you typed is " + brand + " thanks!";
-    }
-
-    let year = prompt("Please enter the Year");
-    let yearText;
-    if (year == null || year == "") {
-        yearText = "User cancelled the prompt.";
-    } else {
-        yearText = "The Year you typed is " + year + " thanks!";
-    }
-
-    let trim = prompt("Please enter the Trim");
-    let trimText;
-    if (trim == null || trim == "") {
-        trimText = "User cancelled the prompt.";
-    } else {
-        ///////////////////////////////////
-        // This code snippet can be found in the confluence documentation and is meant for internal use only
-        ///////////////////////////////////
-    }
-
+function isProd () {
+    (env === "prod") ? openProdTabs(env,brand,year,trim) : openPreviewTabs("preview",brand,year,trim);
 }
 
-// Task #2 add an option to determine if you're doing this for preview or prod => DONE!
-if (confirm("Is this for www-preview?")) {
-    // User clicked "OK"
-    console.log("yes this is for www-preview")
-    getCarDetailsPreview();
-} else if (confirm("Is this for prod?")) {
-    // User clicked "Cancel"
-    getCarDetailsProd();
-    console.log("yes this is for prod")
-} else {
-    // User clicked "Cancel"
-    console.log("no option was selected")
+isProd();
+
+function openProdTabs (env,brand,year,trim = null) {
+
+    for(let i = 0; i < prodIP.length; i++){
+        if(!trim)
+            window.open(`https://${prodIP[i]}/reference.the.documentation.${env}.${brand}.js?refresh=true`) && 
+            window.open(`https://${prodIP[i]}/reference.the.documentation.${env}.${brand}.${year}.js?refresh=true`);
+        else 
+            window.open(`https://${prodIP[i]}/reference.the.documentation.${env}.${brand}.js?refresh=true`) &&
+            window.open(`https://${prodIP[i]}/reference.the.documentation.${env}.${brand}.${year}.js?refresh=true`) &&
+            window.open(`https://${prodIP[i]}/reference.the.documentation.${env}.${brand}.${year}.${trim}.js?refresh=true`);
+    }
+
+    window.open(`https://www.${brand}.com/reference.the.documentation.js`);
+    
 }
 
-// Task #3 add typo fallbacks for the trims => PENDING!
+function openPreviewTabs (env,brand,year,trim = null) {
+
+        if(!trim) {
+            window.open(`https://${previewIP}/reference.the.documentation.${env}.${brand}.js?refresh=true`) && 
+            window.open(`https://${previewIP}/reference.the.documentation.${env}.${brand}.${year}.js?refresh=true`) &&
+            window.open(`https://${previewIP}/reference.the.documentation.prod.${brand}.js?refresh=true`) && 
+            window.open(`https://${previewIP}/reference.the.documentation.prod.${brand}.${year}.js?refresh=true`);
+        }
+            
+        else {
+            window.open(`https://${previewIP}/reference.the.documentation.${env}.${brand}.js?refresh=true`) &&
+            window.open(`https://${previewIP}/reference.the.documentation.${env}.${brand}.${year}.js?refresh=true`) &&
+            window.open(`https://${previewIP}/reference.the.documentation.${env}.${brand}.${year}.${trim}.js?refresh=true`) &&
+            window.open(`https://${previewIP}/reference.the.documentation.prod.${brand}.js?refresh=true`) &&
+            window.open(`https://${previewIP}/reference.the.documentation.prod.${brand}.${year}.js?refresh=true`) &&
+            window.open(`https://${previewIP}/reference.the.documentation.prod.${brand}.${year}.${trim}.js?refresh=true`);
+        }
+
+    window.open(`https://www-${env}.${brand}.com/reference.the.documentation.js`);
+    
+}
 
 
-//KEY NOTES!!!!!!!!!
-// ips = {
-//     "UPDATE LOCALLY",
-//     "https://XX.XXX.XX.XX"
-// }
-// userInputB = brand
-// userInputB = fixFormat(userInputB);
-// userInputT = trim
-// userInputT = fixFormat(userInputT);
-// openTabs("preview", userInputB, year, userInputT)
-// openTabs (env,brand,year,trim = null) {
-//     for(var i = 0; i < ips.length; i++) {
-//         if(!trim)
-//             window.open(ips[i] + "." + env + "." + brand);
-//         else    
-//             window.open(ips[i] + "." + env + "." + brand + "." + trim);
-//     }
-//     window.open("data.js");
-
-// }
-
-// fixFormat(variable) {
-//     variable.toLowerCase()
-//     variable = variable.replace("-","_");
-//     if(variable.contains("4xe")) {
-//         //4xe specific format changes
-//     }
-//     return variable
-// }
+// TASK: fix the format so that the year can only take a number (maybe use Typeof?)
+// Change any "-" in to "_"
+// Make all copy lowercase
+// 4xe specific formatting
 
